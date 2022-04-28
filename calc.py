@@ -1,5 +1,6 @@
 def solve(x):
     j = 0
+    print(x)
 
     if x[0] == '(':
         del x[0]
@@ -76,7 +77,9 @@ def solve(x):
             break
         i+=1
     if type(x) == type([1]):
-        x = x[0]
+        while(type(x) == type([1])):
+            x = x[0]
+
 
 
     return x
