@@ -56,15 +56,6 @@ def solve_rec(s):
         if len(s) == 1:
             break
 
-
-        if s[i] == '+' and s[i-1] != ')' and s[i+1] != '(':
-            s = s[:i-1] + [s[i-1] + s[i+1]] + s[i+2:]
-            leng = len(s)
-            i = 0
-        if s[i] == '-' and s[i-1] != ')' and s[i+1] != '(':
-            s = s[:i-1] + [s[i-1] - s[i+1]] + s[i+2:]
-            leng = len(s)
-            i = 0
         if s[i] == '*' and s[i-1] != ')' and s[i+1] != '(':
             s = s[:i-1] + [s[i-1] * s[i+1]] + s[i+2:]
             leng = len(s)
@@ -79,6 +70,40 @@ def solve_rec(s):
             i = 0
 
 
+
+
+        elif s[i] == '(':
+            sc_w += 1
+            j = i + 1
+            while (s[j] != ')' or sc_w != 1):
+                if s[j] == ')': sc_w -= 1
+                if s[j] == '(': sc_w += 1
+                j += 1
+
+
+            s = s[:i] + solve_rec(s[i + 1:j]) + s[j+1:]
+            leng = len(s)
+            i = 0
+
+        i += 1
+
+    leng = len(s)
+    i = 0
+    sc_w = 0
+    while i < leng:
+        sc_w = 0
+        if len(s) == 1:
+            break
+
+
+        if s[i] == '+' and s[i-1] != ')' and s[i+1] != '(':
+            s = s[:i-1] + [s[i-1] + s[i+1]] + s[i+2:]
+            leng = len(s)
+            i = 0
+        if s[i] == '-' and s[i-1] != ')' and s[i+1] != '(':
+            s = s[:i-1] + [s[i-1] - s[i+1]] + s[i+2:]
+            leng = len(s)
+            i = 0
 
 
         elif s[i] == '(':
