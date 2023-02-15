@@ -1,109 +1,105 @@
-def solve(x):
-    j = 0
-    print(x)
-
-    if x[0] == '(':
-        del x[0]
-    if x[-1] == ')':
-        del x[-1]
-    for i in range(len(x) - 1, 0, -1):
-        if x[i] == ')':
-            del x[i]
-        elif x[i] == '(':
-            del x[i]
-    x = ' '.join(map(str, x)).split()
-
-    c=1
-    k = 0
-    while k < len(x) - 1:
-        if x[k].isdigit() and x[k+1].isdigit():
-            x[k] = int(x[k] + x[k+1])
-            del x[k+1]
-            c+=1
-        k+=1
-
-    lenans = len(x)
-
-    i = 0
-    while i < lenans:
-        if x[i] == '*':
-            if len(x[:i-1]) > 1:
-                x = x[:i-1] + [int(x[i-1]) * int(x[i+1])] + x[i+2:]
-            if len(x[:i-1]) == 1:
-                x = [x[:i-1]] +[int(x[i-1]) * int(x[i+1])] + x[i+2:]
-            if x[:i-1] == []:
-
-                x = [float(x[i-1]) * float(x[i+1])] + x[i+2:]
-            lenans = len(x)
-            i = 0
-        elif x[i] == '/':
-            if len(x[:i-1]) > 1:
-                x = x[:i-1] + [float(x[i-1]) / float(x[i+1])] + x[i+2:]
-            if len(x[:i-1]) == 1:
-                x = [x[:i-1]] +[float(x[i-1]) / float(x[i+1])] + x[i+2:]
-            else:
-                x = [float(x[i-1]) / float(x[i+1])] + x[i+2:]
-            lenans = len(x)
-            i = 0
-        if lenans == 1:
-            break
-        i+=1
-
+def solve(s):
+    if type(s) == type('s'): s = list(s)
+    if (len(s) == 1):
+        try:
+            return [int(s[0])]
+        except ValueError:
+            print("input is invalid")
+            quit()
     
-    lenans = len(x)
-    i=0
-    while i < lenans:
-        
-        if x[i] == '+':
-            if len(x[:i-1]) > 1:
-                x = x[:i-1] + [float(x[i-1]) + float(x[i+1])] + x[i+2:]
-            if len(x[:i-1]) == 1:
-                x = [x[:i-1]] +[float(x[i-1]) + float(x[i+1])] + x[i+2:]
-            else:
-                x = [float(x[i-1]) + float(x[i+1])] + x[i+2:]
-            i = 0
-            lenans = len(x)
+    sc_c = 0
+    leng = len(s)
+    i = 0
 
-        elif x[i] == '-':
-            if len(x[:i-1]) > 1:
-                x = x[:i-1] + [float(x[i-1]) - float(x[i+1])] + x[i+2:]
-            if len(x[:i-1]) == 1:
-                x = [x[:i-1]] +[float(x[i-1]) - float(x[i+1])] + x[i+2:]
-            else:
-                x = [float(x[i-1]) - float(x[i+1])] + x[i+2:]
-            i = 0
-            lenans = len(x)
-        if lenans == 1:
+    while i < leng:
+
+        if s[i] == ' ' and i < leng - 1:
+            s = s[:i] + s[i + 1:]
+        try:
+            if (s[i].isdigit()):
+                d = int(s[i])
+                j = i + 1
+                if i < len(s) - 1:
+                    while (s[j].isdigit() and j < len(s)):
+                        d = d * 10 + int(s[j])
+                        j += 1
+                        if j == len(s):
+                            break
+                if i > 0:
+                    if s[i-1] == '.':
+                        s = s[:i-2] + [float(s[i-2]) + d / 10] + s[i + 1::]
+                
+                    else:
+                        s = s[:i] + [d] + s[j:]
+                else:
+                    s = s[:i] + [d] + s[j:]
+                oldl = leng
+                leng = len(s)
+                i -= (oldl - leng)
+                if i < 0: i = 0
+        except:
+            pass
+
+        i += 1
+    return solve_rec(s)
+    
+
+
+def solve_rec(s):
+    if len(s) == 1: return s
+
+    leng = len(s)
+    i = 0
+    sc_w = 0
+    while i < leng:
+        sc_w = 0
+        if len(s) == 1:
             break
-        i+=1
-    if type(x) == type([1]):
-        while(type(x) == type([1])):
-            x = x[0]
+
+
+        if s[i] == '+' and s[i-1] != ')' and s[i+1] != '(':
+            s = s[:i-1] + [s[i-1] + s[i+1]] + s[i+2:]
+            leng = len(s)
+            i = 0
+        if s[i] == '-' and s[i-1] != ')' and s[i+1] != '(':
+            s = s[:i-1] + [s[i-1] - s[i+1]] + s[i+2:]
+            leng = len(s)
+            i = 0
+        if s[i] == '*' and s[i-1] != ')' and s[i+1] != '(':
+            s = s[:i-1] + [s[i-1] * s[i+1]] + s[i+2:]
+            leng = len(s)
+            i = 0
+        if s[i] == '/' and s[i+1] == '/' and s[i-1] != ')' and s[i+2] != '(':
+            s = s[:i-1] + [s[i-1] // s[i+2]] + s[i+3:]
+            leng = len(s)
+            i = 0
+        elif s[i] == '/' and s[i-1] != ')' and s[i+1] != '(':
+            s = s[:i-1] + [s[i-1] / s[i+1]] + s[i+2:]
+            leng = len(s)
+            i = 0
 
 
 
-    return x
-x = ['('] + list(input()) + [')']
-stack = []
-stack_i = []
-lensolved = 0
-i = 0
-while i < len(x) - 1:
-    if '(' == x[i]:
-        stack.append('(')
-        stack_i.append(i)
-    if ')' == x[i]:
-        if x[:stack_i[-1]] and x[i+1:]:
-            x = x[:stack_i[-1] - 1] + [solve(x[stack_i[-1] + 1:i])] + x[i+1:]
-        elif x[:stack_i[-1]]:
-            x = x[:stack_i[-1] - 1] + [solve(x[stack_i[-1] + 1:i])]
-        elif x[i+1:]:
-            x = [solve(x[stack_i[-1] + 1:i])] + x[i+1:]
-        else:
-            break
-        del stack[-1]
-        del stack_i[-1]
-        i = 0
-    i+=1
-x = solve(x)
-print(x)
+
+        elif s[i] == '(':
+            sc_w += 1
+            j = i + 1
+            while (s[j] != ')' or sc_w != 1):
+                if s[j] == ')': sc_w -= 1
+                if s[j] == '(': sc_w += 1
+                j += 1
+
+
+            s = s[:i] + solve_rec(s[i + 1:j]) + s[j+1:]
+            leng = len(s)
+            i = 0
+
+        i += 1
+
+
+    return s
+
+
+
+print(*solve(input()))
+            
