@@ -1,6 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
-#define LEN 500
+#define LEN 500  // max length of expression
+
+
 typedef struct{
     char type;
     union{
