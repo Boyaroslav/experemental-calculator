@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include<unistd.h>
 #define LEN 500  // max length of expression
 
 
@@ -62,11 +63,12 @@ void print_arr(int s, int e){
 
 int solve_rec(int s, int e){
     if(e-s == 1 || i == 1){return buff[s].num;}
+
     for(int j=s; j<e; j++){
                 if(buff[j].b == '('){
                 int sc_cnt = 1;
                 int w=j+1;
-                while(w>i||sc_cnt>0){
+                while(w>e||sc_cnt>0){
                     if(buff[w].b == '('){sc_cnt++;}
                     else if(buff[w].b == ')'){sc_cnt--;}
 
@@ -74,9 +76,10 @@ int solve_rec(int s, int e){
                 }
                 w--;
                 
-
                 buff[j].type = 'd';
                 buff[j].num = solve_rec(j+1, w);
+                e -= (w - j);
+
                 del_space(j+1);del_space(j+1);
 
             }
@@ -111,9 +114,6 @@ int solve_rec(int s, int e){
                     del_space(j); del_space(j); j=s; e -= 2;
                 }
         }}}
-
-
-
     return solve_rec(s, e);
 }
 
