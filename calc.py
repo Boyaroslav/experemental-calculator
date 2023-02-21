@@ -17,6 +17,11 @@ def solve(s):
             s = s[:i] + s[i + 1:]
         try:
             if (s[i].isdigit()):
+                lowerz = 0
+                if i > 0:
+                    if s[i-1] == '.':
+                        lowerz = 1
+
                 d = int(s[i])
                 j = i + 1
                 if i < len(s) - 1:
@@ -25,12 +30,10 @@ def solve(s):
                         j += 1
                         if j == len(s):
                             break
-                if i > 0:
-                    if s[i-1] == '.':
-                        s = s[:i-2] + [float(s[i-2]) + d / 10] + s[i + 1::]
-                
-                    else:
-                        s = s[:i] + [d] + s[j:]
+                if lowerz:
+                    d = float(s[i-2] + (d / (10 ** (j - i))))
+                    s = s[:i-2] + [d] + s[j:]
+
                 else:
                     s = s[:i] + [d] + s[j:]
                 oldl = leng
